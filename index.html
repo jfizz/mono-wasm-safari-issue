@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<input id="input" type="file" onchange="onFileChange(this)">
+<script type="text/javascript">
+  window.onFileChange = function(target) {
+    var fileReader = new FileReader();
+    fileReader.onload = function() {
+      var array = new Uint8Array(fileReader.result);
+      var worker = new Worker('/worker.js');
+      worker.postMessage(array, [array.buffer]);
+    };
+    fileReader.onerror = function(e) {console.error(e);};
+    fileReader.readAsArrayBuffer(target.files[0]);
+  };
+</script>
+</body>
+</html>
